@@ -1,5 +1,5 @@
-## Play level Variable
-## if the variable declear in play level it is accesible in all tasks.
+# 01 Play level Variable
+# if the variable declear in play level it is accesible in all tasks.
 - name: play level variables
   hosts: all
   vars:
@@ -10,19 +10,19 @@
        msg: url = {{URL}}
 
 
-## file level variable
+# 02 file level variable
 - name: play level variable from the file
   hosts: all
   vars_files: 
     vars_sample.yml
-## if Variable files is at different location then specify the complete path to access the file variables
+# if Variable files is at different location then specify the complete path to access the file variables
   tasks:
    - name: print play level variable from file
      ansible.builtin.debug:
       msg: url = {{URL}} 
 
-## Task level variable
-## if variable is declear at task level then it is accesiable in task only. 
+# 03 Task level variable
+# if variable is declear at task level then it is accesiable in task only. 
 - name: task level variables 
   hosts: all
   tasks: 
@@ -32,11 +32,37 @@
      vars: 
        URL: example.tasklevel.variable 
 
-
-## Inventory level variable
+# 04 Inventory level variable
 - name: inventory level variable
   hosts: all
   tasks: 
    - name: Print inventory level variable
      ansible.builtin.debug:
        msg: url={{URL}}
+
+# 05 Command level variable
+# ansible-playbook -i inventory -u centos -k 02-vars.yml -e URL=test.command.variable
+
+# 06 Ansible pre-defined variables  ---called as Facts
+# ansible -i inventory all -u centos -k -m setup
+# ansible ssh variables
+- name: Ansible pre-defined variable  
+  hosts: all
+  tasks: 
+   - name: Print inventory level variable
+     ansible.builtin.debug:
+       msg: ansible_architecture = {{ansible_architecture}}, IP address = {{ansible_eth0.ipv4.address}}
+
+
+# 06 Register variable
+
+- name: register variable
+  hosts: all
+  tasks: 
+   - name: run a shell script
+     ansible.builtin.shell: uptime
+     register: OUT
+
+   - name: print the output 
+     ansible.builtin.debug:
+       msg: "{{OUT}}"
