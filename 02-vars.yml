@@ -1,3 +1,5 @@
+## Play level Variable
+## if the variable declear in play level it is accesible in all tasks.
 - name: play level variables
   hosts: all
   vars:
@@ -7,8 +9,8 @@
       ansible.builtin.debug:
        msg: url = {{URL}}
 
-## if the variable declear in play level it is accesible in all tasks.
 
+## file level variable
 - name: play level variable from the file
   hosts: all
   vars_files: 
@@ -19,6 +21,8 @@
      ansible.builtin.debug:
       msg: url = {{URL}} 
 
+## Task level variable
+## if variable is declear at task level then it is accesiable in task only. 
 - name: task level variables 
   hosts: all
   tasks: 
@@ -28,4 +32,11 @@
      vars: 
        URL: example.tasklevel.variable 
 
-## if variable is declear at task level then it is accesiable in task only. 
+
+## Inventory level variable
+- name: inventory level variable
+  hosts: all
+  tasks: 
+   - name: Print inventory level variable
+     ansible.builtin.debug:
+       msg: url={{URL}}
