@@ -13,7 +13,19 @@
   hosts: all
   vars_files: 
     vars_sample.yml
+## if Variable files is at different location then specify the complete path to access the file variables
   tasks:
    - name: print play level variable from file
      ansible.builtin.debug:
       msg: url = {{URL}} 
+
+- name: task level variables 
+  hosts: all
+  tasks: 
+   - name: print the task level variable
+     ansible.builtin.debug:
+       msg: url = {{URL}} 
+     vars: 
+       URL: example.tasklevel.variable 
+
+## if variable is declear at task level then it is accesiable in task only. 
