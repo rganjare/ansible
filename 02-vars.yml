@@ -1,0 +1,8 @@
+- name: play level variables
+  hosts: all
+  vars:
+   URL: ansible.variable
+  tasks:
+    - name: pring ansible variables
+      ansible.builtin.debug:
+       msg: url = {{URL}}
