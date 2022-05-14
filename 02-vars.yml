@@ -1,8 +1,19 @@
 - name: play level variables
   hosts: all
   vars:
-   URL: ansible.variable
+   URL: play.ansible.variable
   tasks:
-    - name: pring ansible variables
+    - name: print ansible play lavel variable
       ansible.builtin.debug:
        msg: url = {{URL}}
+
+## if the variable declear in play level it is accesible in all tasks.
+
+- name: play level variable from the file
+  hosts: all
+  vars_files: 
+    -vars_sample.yml
+  tasks:
+   - name: print play level variable from file
+     ansible.builtin.debug:
+      msg: url = {{URL}} 
