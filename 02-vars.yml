@@ -55,7 +55,6 @@
 
 
 # 06 Register variable
-
 - name: register variable
   hosts: all
   tasks: 
@@ -63,6 +62,10 @@
      ansible.builtin.shell: uptime
      register: OUT
 
+   - name: set a Facts
+     ansible.builtin.set_fact:
+       OUTPUT="{{OUT.stdout}}"
+
    - name: print the output 
      ansible.builtin.debug:
-       msg: "{{OUT}}"
+       msg: "{{OUTPUT}}"
