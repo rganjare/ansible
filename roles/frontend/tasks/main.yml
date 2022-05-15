@@ -1,7 +1,6 @@
-
 - name: Setting up Frontend
   ansible.builtin.debug:
-   - msg: Setting up Frontend
+    msg: Setting up Frontend
 
 # - name: Install Nginx
 #   yum:
