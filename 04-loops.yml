@@ -1,0 +1,22 @@
+- name: ansible simple loops
+  hosts: localhost
+  tasks: 
+   - name: print value in loop
+     ansible.builtin.debug:
+       msg: "{{item}}"
+     loop: 
+      - value1
+      - value2
+      - value3
+      - value4 
+
+- name: ansible loop over map
+  hosts: localhost
+  tasks:
+   - name: print over the map
+     ansible.builtin.debug:
+       msg: name is ={{item.name}} , count is={{item.count}}
+     loop:
+      - { name: value1, count: 10 }
+      - { name: value2, count: 20 }
+
