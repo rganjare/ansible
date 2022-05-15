@@ -1,1 +1,21 @@
-3.234.230.90 URL=inventory.level.variable.com
+[FRONTEND]
+frontend.roboshop.internal
+
+
+cart.roboshop.internal
+
+catalogue.roboshop.internal
+
+mongodb.roboshop.internal
+
+mysql.roboshop.internal
+
+payment.roboshop.internal
+
+rabbitmq.roboshop.internal
+
+redis.roboshop.internal
+
+shipping.roboshop.internal
+
+user.roboshop.internal
