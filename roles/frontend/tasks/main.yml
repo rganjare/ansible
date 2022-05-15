@@ -2,27 +2,45 @@
   ansible.builtin.debug:
     msg: Setting up Frontend
 
-# - name: Install Nginx
-#   yum:
-#     name: nginx
-#     state: present
-
-
 # yum install nginx -y
-# systemctl enable nginx
-# systemctl start nginx
-
-
+- name: Install Nginx
+  ansible.builtin.yum:
+    name: nginx
+    state: installed
 
 # curl -s -L -o /tmp/frontend.zip "https://github.com/roboshop-devops-project/frontend/archive/main.zip"
+- name: Download and extract frontend
+  ansible.builtin.unarchive:
+    src: https://github.com/roboshop-devops-project/frontend/archive/main.zip
+    dest: /tmp
+    remote_src: yes
 
-
-
+# unzip /tmp/frontend.zip
 # cd /usr/share/nginx/html
 # rm -rf *
-# unzip /tmp/frontend.zip
+- name: Clean-up old HTML content
+  ansible.builtin.file:
+    path: /usr/share/nginx/html
+    state: absent
+
 # mv frontend-main/* .
 # mv static/* .
-# rm -rf frontend-main README.md
+- name: copy frontend content to nginx path
+  ansible.builtin.copy:
+    src: /tmp/frontend-main/static/
+    dest: /usr/share/nginx/html/
+    remote_src: yes
+
 # mv localhost.conf /etc/nginx/default.d/roboshop.conf
+- name: copy frontend configuration
+  ansible.builtin.copy:
+    src:  roboshop.conf
+    dest: /etc/nginx/default.d/roboshop.conf
+  
+# systemctl enable nginx # systemctl start nginx
+- name: Start Nginx service
+  ansible.builtin.systemd:
+    name: nginx
+    state: restarted
+    enabled: yes
 
