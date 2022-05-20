@@ -2,36 +2,37 @@
   ansible.builtin.debug:
     msg: Setting up MongoDB
 
-# Ref URL: [https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/)
-
 # 1. Setup MongoDB repos.
-
-# ```bash
 # curl -s -o /etc/yum.repos.d/mongodb.repo https://raw.githubusercontent.com/roboshop-devops-project/mongodb/main/mongo.repo
-# ```
 
-# 1. Install Mongo & Start Service.
+- name: Setup MongoDB repos.
+  ansible.builtin.copy:
+    src: mongodb.repo
+    dest: /etc/yum.repos.d/mongodb.repo
 
-# ```bash
-# # yum install -y mongodb-org
-# # systemctl enable mongod
-# # systemctl start mongod
+# 2. Install Mongo & Start Service.
+- name: Install Mongo
+  ansible.builtin.yum:
+    name: mongodb-org
+    status: installed 
 
-# ```
-
-# 1. Update Listen IP address from 127.0.0.1 to 0.0.0.0 in config file
-
+# 3. Update Listen IP address from 127.0.0.1 to 0.0.0.0 in config file
 # Config file: `/etc/mongod.conf`
+- name: update mongodb configuration - Replace 127.0.0.1 to 0.0.0.0 in config file   
+  ansible.builtin.replace:
+    path: /etc/mongod.conf
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0'
 
-# then restart the service
+# 4. Restart the service
+- name: restart the service
+  ansible.builtin.systemd:
+    name: mongod
+    state: started
+    enabled: yes
 
-# ```bash
-# # systemctl restart mongod
-
-# ```
 
 # ## Every Database needs the schema to be loaded for the application to work.
-
 # Download the schema and load it.
 
 # ```
