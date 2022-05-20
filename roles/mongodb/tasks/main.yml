@@ -46,15 +46,16 @@
 # # cd mongodb-main
 # # mongo < catalogue.js
 # # mongo < users.js
+
+# - name: Load the users.js schema
+#   community.mongodb.mongodb_shell:
+#     file: "/tmp/mongodb-main/users.js"
+#     idempotent: yes
+
 - name: Load the catalogue.js schema
   community.mongodb.mongodb_shell:
-    file: "/tmp/mongodb-main/catalogue.js"
+    file: "/tmp/mongodb-main/{{item}}.js"
     idempotent: yes
-
-- name: Load the users.js schema
-  community.mongodb.mongodb_shell:
-    file: "/tmp/mongodb-main/users.js"
-    idempotent: yes
-
-
-# Symbol `<` will take the input from a file and give that input to the command.
+  loop:
+    - catalogue
+    - users
