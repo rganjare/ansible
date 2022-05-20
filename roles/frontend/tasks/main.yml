@@ -9,11 +9,16 @@
     state: installed
 
 # curl -s -L -o /tmp/frontend.zip "https://github.com/roboshop-devops-project/frontend/archive/main.zip"
+# - name: Download and extract frontend
+#   ansible.builtin.unarchive:
+#     src: https://github.com/roboshop-devops-project/frontend/archive/main.zip
+#     dest: /tmp
+#     remote_src: yes
+
 - name: Download and extract frontend
-  ansible.builtin.unarchive:
-    src: https://github.com/roboshop-devops-project/frontend/archive/main.zip
-    dest: /tmp
-    remote_src: yes
+  include_role:
+    name: common
+    tasks_from: download
 
 # unzip /tmp/frontend.zip
 # cd /usr/share/nginx/html
