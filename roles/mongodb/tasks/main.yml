@@ -8,13 +8,13 @@
 - name: Setup MongoDB repos.
   ansible.builtin.copy:
     src: mongodb.repo
-    dest: /etc/yum.repos.d/
+    dest: /etc/yum.repos.d/mongodb.repo
 
 # 2. Install Mongo & Start Service.
 - name: Install MongoDB
   ansible.builtin.yum:
     name: mongodb-org
-    status: present  
+    state: installed  
 
 # 3. Update Listen IP address from 127.0.0.1 to 0.0.0.0 in config file
 # Config file: `/etc/mongod.conf`
