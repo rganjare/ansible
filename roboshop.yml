@@ -1,11 +1,17 @@
-- name: Roboshop setup
-  become: yes
-  hosts: FRONTEND
-  roles:
-   - frontend
+# - name: Roboshop setup
+#   become: yes
+#   hosts: FRONTEND
+#   roles:
+#    - frontend
 
-- name: MongoDB setup
+# - name: MongoDB setup
+#   become: yes
+#   hosts: MONGODB
+#   roles:
+#    - mongodb
+
+- name: "'{{COMPONENT}}' setup"
   become: yes
-  hosts: MONGODB
+  hosts: "{{HOST}}"
   roles:
-   - mongodb
+   - "{{role_name}}"
