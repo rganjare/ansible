@@ -55,16 +55,23 @@
     path: /home/roboshop/catalogue
   become_user: roboshop
 
-# 1. Update SystemD file with correct IP addresses
-    
-#     Update `MONGO_DNSNAME` with MongoDB Server IP
-    
-# 2. Now, lets set up the service with systemctl.
-
-# ```bash
+# Update SystemD file with correct IP addresses
+#Update `MONGO_DNSNAME` with MongoDB Server IP
+# Now, lets set up the service with systemctl.
 # # mv /home/roboshop/catalogue/systemd.service /etc/systemd/system/catalogue.service
+
+- name: Copy SystemD file
+  ansible.builtin.copy:
+    src: systemd.service
+    dest: /etc/systemd/system/catalogue.service
+
 # # systemctl daemon-reload
 # # systemctl start catalogue
 # # systemctl enable catalogue
 
-# ```
+- name: Start Catalogue service
+  ansible.builtin.systemd:
+    name: catalogue
+    state: restarted
+    enabled: yes
+    daemon-reload: yes
