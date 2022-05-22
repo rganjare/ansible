@@ -10,7 +10,7 @@
 #   roles:
 #    - mongodb
 
-- name: "'{{COMPONENT}}' setup"
+- name: "{{COMPONENT}} setup"
   become: yes
   hosts: "{{HOST}}"
   roles:
