@@ -51,9 +51,11 @@
 
 # $ npm install
 - name: install NPM Dependencies from package.json
-  community.general.npm:
-    path: /home/roboshop/catalogue
-  become_user: roboshop
+  ansible.builtin.debug:
+    msg: Setting up Catalogue Component
+  # community.general.npm:
+  #   path: /home/roboshop/catalogue
+  # become_user: roboshop
 
 # 1. Update SystemD file with correct IP addresses
     
