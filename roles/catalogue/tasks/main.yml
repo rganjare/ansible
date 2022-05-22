@@ -50,7 +50,7 @@
   become_user: roboshop
 
 # $ npm install
-- name: Install NPM Dependencies from package.json.
+- name: install NPM Dependencies from package.json
   community.general.npm:
     path: /home/roboshop/catalogue
   become_user: roboshop
