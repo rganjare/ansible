@@ -1,9 +1,4 @@
-- name: Setup user component
-  ansible.builtin.debug:
-    msg: Setup user component
-
-
-# - name: NodeJS App Setup
-#   include_role:
-#     name: common
-#     tasks_from: nodejs
+- name: NodeJS App Setup
+  include_role:
+    name: common
+    tasks_from: nodejs
