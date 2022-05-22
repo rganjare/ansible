@@ -15,7 +15,7 @@
       - gcc-c++
     state: installed
 
-# 1. Let's now set up the catalogue application.
+# 2. Let's now set up the catalogue application.
 # As part of operating system standards, we run all the applications and databases as a normal user but not with root user.
 # So to run the catalogue service we choose to run as a normal user and that user name should be more relevant to the project. 
 # Hence we will use `roboshop` as the username to run the service.
@@ -24,16 +24,30 @@
 - name: Add the application user 
   ansible.builtin.user:
     name: roboshop
-    comment: Roboshop application user
+    comment: Roboshop project application user
 
-# 1. So let's switch to the `roboshop` user and run the following commands.
-
-# ```bash
+# 3. So let's switch to the `roboshop` user and run the following commands.
 # $ curl -s -L -o /tmp/catalogue.zip "https://github.com/roboshop-devops-project/catalogue/archive/main.zip"
-# $ cd /home/roboshop
-# $ unzip /tmp/catalogue.zip
+
+- name: Download and extract catalogue
+  include_role:
+    name: common
+    tasks_from: download
+
+# rm -rf *
+- name: Clean-up old content
+  ansible.builtin.file:
+    path: /home/roboshop/catalogue
+    state: absent
+
 # $ mv catalogue-main catalogue
 # $ cd /home/roboshop/catalogue
+- name: copy catalogue content
+  ansible.builtin.copy:
+    src: /tmp/catalogue-main/static/
+    dest: /home/roboshop/catalogue
+    remote_src: yes
+
 # $ npm install
 
 # ```
