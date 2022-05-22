@@ -44,9 +44,10 @@
 # $ cd /home/roboshop/catalogue
 - name: copy catalogue content
   ansible.builtin.copy:
-    src: /tmp/catalogue-main/static/
+    src: /tmp/catalogue-main/
     dest: /home/roboshop/catalogue
     remote_src: yes
+  become_user: roboshop
 
 # $ npm install
 
