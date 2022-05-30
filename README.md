@@ -10,7 +10,7 @@ Inventory is text file, Then entries in the inventory can be an IP address or DN
 XML 
 
 <courseName>DevOps</courseName>
-<trainerName>Raghu K</trainerName>
+<trainerName>Rahul</trainerName>
 <trainees>
     abc@gmail.com,
     xyz@gmail.com
@@ -24,7 +24,7 @@ JSON
 
 {
  "courseName": "DevOps",
- "trainerName": "RaghuK",
+ "trainerName": "Rahul",
  "trainees": [
     "abc@gmail.com",
     "xyz@gmail.com"
@@ -38,7 +38,7 @@ JSON
 
 YAML
 courseName: DevOps
-trainerName: RaghuK
+trainerName: Rahul
 trainees:
   - abc@gmail.com
   - xyz@gmail.com 
