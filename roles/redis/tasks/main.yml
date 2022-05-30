@@ -1,27 +1,19 @@
-- name: Setup Redis component
-  ansible.builtin.debug:
-    msg: Setup Redis component
-
-# # curl -L https://raw.githubusercontent.com/roboshop-devops-project/redis/main/redis.repo -o /etc/yum.repos.d/redis.repo
-- name: set up YUM redis repo
+- name: Setup Redis YUm Repo
   ansible.builtin.copy:
     src: redis.repo
     dest: /etc/yum.repos.d/redis.repo
 
-# # yum install redis-6.2.7 -y
-- name: install redis
+- name: Install Redis
   ansible.builtin.yum:
     name: redis
     state: installed
 
-# 2. Update the BindIP from `127.0.0.1` to `0.0.0.0` in config file `/etc/redis.conf` & `/etc/redis/redis.conf`
-- name: update redis configuration - Replace 127.0.0.1 to 0.0.0.0 in config file   
+- name: Update redis configuration - Listen Address
   ansible.builtin.replace:
     path: /etc/redis.conf
     regexp: '127.0.0.1'
     replace: '0.0.0.0'
 
-# 3. Start Redis Database
 - name: Start Redis
   ansible.builtin.systemd:
     name: redis

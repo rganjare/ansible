@@ -1,0 +1,37 @@
+- name: Ansible conditions
+  hosts: localhost
+  vars:
+    a: abc
+    b: 10
+    c: true
+    d: false
+  tasks: 
+    - name: True String condition 
+      ansible.builtin.debug:
+        msg: String condition is true
+      when: a == "abc"  
+
+    - name: flase String condition 
+      ansible.builtin.debug:
+        msg: String condition is false
+      when: a != "abc"
+
+    - name: true integer condition
+      ansible.builtin.debug:
+        msg: Both numbers are equal 
+      when: b == 10  
+
+    - name: Integer condition
+      ansible.builtin.debug:
+        msg: b is less than 20
+      when: b < 20  
+
+    - name: True Boolen condition
+      ansible.builtin.debug:
+        msg: C is true     
+      when: c  
+
+    - name: false Boolen condition
+      ansible.builtin.debug:
+        msg: D is false     
+      when: not d  

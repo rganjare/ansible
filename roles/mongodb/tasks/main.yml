@@ -1,66 +1,35 @@
-- name: Setup MongoDB
-  ansible.builtin.debug:
-    msg: Setting up MongoDB
-
-# 1. Setup MongoDB repos.
-# curl -s -o /etc/yum.repos.d/mongodb.repo https://raw.githubusercontent.com/roboshop-devops-project/mongodb/main/mongo.repo
-
-- name: Setup MongoDB repos.
+- name: Copy MongoDB repo file
   ansible.builtin.copy:
     src: mongodb.repo
     dest: /etc/yum.repos.d/mongodb.repo
 
-# 2. Install Mongo & Start Service.
 - name: Install MongoDB
   ansible.builtin.yum:
     name: mongodb-org
-    state: installed  
+    state: installed
 
-# 3. Update Listen IP address from 127.0.0.1 to 0.0.0.0 in config file
-# Config file: `/etc/mongod.conf`
-- name: update mongodb configuration - Replace 127.0.0.1 to 0.0.0.0 in config file   
+- name: Update MongoDB Configuration - Update Listen Address
   ansible.builtin.replace:
     path: /etc/mongod.conf
     regexp: '127.0.0.1'
     replace: '0.0.0.0'
 
-# 4. Restart the service
-- name: restart the service
+- name: Start MongoDB Service
   ansible.builtin.systemd:
     name: mongod
     state: started
     enabled: yes
 
-# ## Every Database needs the schema to be loaded for the application to work.
-# Download the schema and load it.
-# # curl -s -L -o /tmp/mongodb.zip "https://github.com/roboshop-devops-project/mongodb/archive/main.zip"
-
-# - name: Download and extract schema
-#   ansible.builtin.unarchive:
-#     src: https://github.com/roboshop-devops-project/mongodb/archive/main.zip
-#     dest: /tmp
-#     remote_src: yes
-
-- name: Download and extract MongoDB
+- name: Download and Extract MongoDB Schema
   include_role:
     name: common
-    tasks_from: download
+    tasks_from: download-from-github
 
-# # cd /tmp
-# # unzip mongodb.zip
-# # cd mongodb-main
-# # mongo < catalogue.js
-# # mongo < users.js
-
-# - name: Load the users.js schema
-#   community.mongodb.mongodb_shell:
-#     file: "/tmp/mongodb-main/users.js"
-#     idempotent: yes
-
-- name: Load the catalogue.js schema
+- name: Load Schema
   community.mongodb.mongodb_shell:
     file: "/tmp/mongodb-main/{{item}}.js"
     idempotent: yes
   loop:
     - catalogue
     - users
+

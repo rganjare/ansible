@@ -1,0 +1,48 @@
+- name: Install Maven
+  ansible.builtin.yum:
+    name:
+      #- maven
+      - java
+    state: installed
+
+- name: Setup App USer, Download and Extract {{COMPONENT}} Content
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: download
+  vars:
+    APP_LOCATION: "/home/roboshop/{{COMPONENT}}"
+    APP_USER: roboshop
+
+#- name: Make maven package
+#  ansible.builtin.shell: mvn clean package && mv target/shipping-1.0.jar shipping.jar
+#  args:
+#    chdir: /home/roboshop/{{COMPONENT}}
+#  become_user: roboshop
+
+- name: Caluclate Memory
+  shell: "echo {{ansible_memory_mb.real.total * 0.8 }} | awk -F . '{print $1}'"
+  register: out
+
+- name: Set Memory Variable
+  set_fact:
+    MEMORY: "{{out.stdout}}"
+
+- name: Setup SyetemD
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: systemd
+
+- name: Configure Rsyslog
+  ansible.builtin.include_role:
+    name: elk
+    tasks_from: rsyslog
+
+- name: Configure Filebeat
+  ansible.builtin.include_role:
+    name: elk
+    tasks_from: filebeat
+
+- name: Install Prometheus Node exporter
+  ansible.builtin.include_role:
+    name: prometheus
+    tasks_from: node-exporter

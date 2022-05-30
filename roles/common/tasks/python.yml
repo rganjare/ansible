@@ -1,0 +1,57 @@
+- name: Install Python3
+  ansible.builtin.yum:
+    name:
+      - python36
+      - gcc
+      - python3-devel
+    state: installed
+
+- name: Setup App USer, Download and Extract {{COMPONENT}} Content
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: download
+  vars:
+    APP_LOCATION: "/home/roboshop/{{COMPONENT}}"
+    APP_USER: roboshop
+
+- name: Install Python Dependencies
+  ansible.builtin.pip:
+    requirements: /home/roboshop/{{COMPONENT}}/requirements.txt
+    executable: pip3
+
+- name: Update USER ID in App Configuration
+  ansible.builtin.lineinfile:
+    path: /home/roboshop/{{COMPONENT}}/{{COMPONENT}}.ini
+    regexp: '^uid'
+    line: uid = {{APP_USER_REGISTER.uid}}
+
+- name: Update GROUP ID in App Configuration
+  ansible.builtin.lineinfile:
+    path: /home/roboshop/{{COMPONENT}}/{{COMPONENT}}.ini
+    regexp: '^gid'
+    line: gid = {{APP_USER_REGISTER.group}}
+
+- name: Fetch the Passwords
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: aws-secret-manager
+
+- name: Setup SyetemD
+  ansible.builtin.include_role:
+    name: common
+    tasks_from: systemd
+
+- name: Configure Rsyslog
+  ansible.builtin.include_role:
+    name: elk
+    tasks_from: rsyslog
+
+- name: Configure Filebeat
+  ansible.builtin.include_role:
+    name: elk
+    tasks_from: filebeat
+
+- name: Install Prometheus Node exporter
+  ansible.builtin.include_role:
+    name: prometheus
+    tasks_from: node-exporter

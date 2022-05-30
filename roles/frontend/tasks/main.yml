@@ -1,51 +1,55 @@
-- name: Setting up Frontend
-  ansible.builtin.debug:
-    msg: Setting up Frontend
-
-# yum install nginx -y
 - name: Install Nginx
   ansible.builtin.yum:
     name: nginx
     state: installed
 
-# curl -s -L -o /tmp/frontend.zip "https://github.com/roboshop-devops-project/frontend/archive/main.zip"
-# - name: Download and extract frontend
-#   ansible.builtin.unarchive:
-#     src: https://github.com/roboshop-devops-project/frontend/archive/main.zip
-#     dest: /tmp
-#     remote_src: yes
-
-- name: Download and extract frontend
+- name: Download and Extract Frontend
   include_role:
     name: common
     tasks_from: download
+  vars:
+    APP_USER: root
+    APP_LOCATION: /usr/share/nginx/html
 
-# unzip /tmp/frontend.zip
-# cd /usr/share/nginx/html
-# rm -rf *
-- name: Clean-up old HTML content
-  ansible.builtin.file:
-    path: /usr/share/nginx/html
-    state: absent
+#- name: Cleanup Old HTML Content
+#  ansible.builtin.file:
+#    path: /usr/share/nginx/html
+#    state: absent
 
-# mv frontend-main/* .
-# mv static/* .
-- name: copy frontend content to nginx path
-  ansible.builtin.copy:
-    src: /tmp/frontend-main/static/
-    dest: /usr/share/nginx/html/
-    remote_src: yes
+#- name: Copy the frontend content to nginx path
+#  ansible.builtin.copy:
+#    src: /tmp/frontend-main/static/
+#    dest: /usr/share/nginx/html/
+#    remote_src: yes
+# Note: IN src and dest, ending / is very important when you are copying directories
 
-# mv localhost.conf /etc/nginx/default.d/roboshop.conf
-- name: copy frontend configuration
-  ansible.builtin.copy:
-    src:  roboshop.conf
+- name: Copy RoboShop Configuration
+  ansible.builtin.template:
+    src: roboshop.conf
     dest: /etc/nginx/default.d/roboshop.conf
-  
-# systemctl enable nginx # systemctl start nginx
-- name: Start Nginx service
+  #notify: Restart Nginx
+
+- name: Copy Nginx Configuration
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  #notify: Restart Nginx
+
+- name: Start Nginx Service
+  ignore_errors: "{{CHECK_MODE}}"
   ansible.builtin.systemd:
     name: nginx
-    state: restarted
+    state: started
     enabled: yes
+  when: ENV != "ENV"
+
+- name: Configure Filebeat
+  ansible.builtin.include_role:
+    name: elk
+    tasks_from: filebeat
+
+- name: Install Prometheus Node exporter
+  ansible.builtin.include_role:
+    name: prometheus
+    tasks_from: node-exporter
 
